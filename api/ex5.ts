@@ -28,7 +28,95 @@ router.get("/", (req, res) => {
 //         }
 //     })
 // });
-//http://localhost:5000/ex5/deleteMovie?movieId=
+
+//http://localhost:3000/ex5/addMovie
+router.post("/addMovie", (req, res) => {
+    const movieData = req.body; // ข้อมูลหนังที่ถูกส่งมา
+    const sqlQuery = `
+        INSERT INTO movies (movie_name, poster, date, plot, genre)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+    const values = [
+        movieData.movie_name,
+        movieData.poster,
+        movieData.date,
+        movieData.plot,
+        movieData.genre
+    ];
+    conn.query(sqlQuery, values, (err, result) => {
+        if (err) {
+            console.error("Error adding movie:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.json({ message: "Movie added successfully", movieId: result.insertId });
+        }
+    });
+});
+
+
+router.post("/addPerson", (req, res) => {
+    const personData = req.body; // ข้อมูลของบุคคลที่ถูกส่งมา
+    const sqlQuery = `
+        INSERT INTO person (name, birthdate, person_type)
+        VALUES (?, ?, ?)
+    `;
+    const values = [
+        personData.name,
+        personData.birthdate,
+        personData.person_type
+    ];
+    conn.query(sqlQuery, values, (err, result) => {
+        if (err) {
+            console.error("Error adding person:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.json({ message: "Person added successfully", personId: result.insertId });
+        }
+    });
+});
+
+router.post("/addStar", (req, res) => {
+    const starData = req.body; // ข้อมูลของดาราที่ถูกส่งมา
+    const sqlQuery = `
+        INSERT INTO stars (movie_id, person_id)
+        VALUES (?, ?)
+    `;
+    const values = [
+        starData.movie_id,
+        starData.person_id
+    ];
+    conn.query(sqlQuery, values, (err, result) => {
+        if (err) {
+            console.error("Error adding star:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.json({ message: "Star added successfully", starId: result.insertId });
+        }
+    });
+});
+
+router.post("/addCreator", (req, res) => {
+    const creatorData = req.body; // ข้อมูลของผู้สร้างที่ถูกส่งมา
+    const sqlQuery = `
+        INSERT INTO creators (movie_id, person_id)
+        VALUES (?, ?)
+    `;
+    const values = [
+        creatorData.movie_id,
+        creatorData.person_id
+    ];
+    conn.query(sqlQuery, values, (err, result) => {
+        if (err) {
+            console.error("Error adding creator:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.json({ message: "Creator added successfully", creatorId: result.insertId });
+        }
+    });
+});
+
+
+//http://localhost:3000/ex5/deleteMovie?movieId=
 //ลบหนัง
 router.delete("/deleteMovie", (req, res) => {
     const movieIdToDelete = req.query.movieId; // ใช้ req.query เพื่อรับค่าจาก query parameter
@@ -147,4 +235,3 @@ router.get("/searchMovie", (req, res) => {
         }
     });
 });
-
